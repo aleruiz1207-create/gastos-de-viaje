@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gastos del Viaje</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<style>
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#eef2f7;
+    padding:10px;
+    color:#1e293b;
+}
+
+.container{ max-width:780px; margin:auto; }
+
+.header{
+    background:linear-gradient(135deg,#06245c,#2563eb);
+    border-radius:16px;
+    padding:16px 20px;
+    color:white;
+    margin-bottom:12px;
+}
+.header-top{ display:flex; align-items:center; gap:12px; }
+.logo{
+    width:48px; height:48px; border-radius:12px;
+    background:rgba(255,255,255,0.15);
+    display:flex; align-items:center; justify-content:center; font-size:20px;
+}
+.header h1{ font-size:20px; font-weight:700; }
+.header p{ font-size:11px; opacity:.9; }
+
+.card{
+    background:white; border-radius:14px;
+    padding:16px; margin-bottom:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.06);
+}
+.section-title{ display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+.number{
+    width:28px; height:28px; border-radius:8px;
+    background:#2563eb; color:white;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:600; flex-shrink:0;
+}
+.section-title h2{ font-size:15px; font-weight:600; }
+
+.grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.full{ grid-column:1/-1; }
+
+.field{ display:flex; flex-direction:column; }
+.field label{ margin-bottom:4px; font-size:11px; font-weight:600; color:#475569; }
+.input-box{ position:relative; }
+.input-box i{
+    position:absolute; left:11px; top:50%;
+    transform:translateY(-50%); color:#94a3b8; font-size:12px;
+}
+input, textarea{
+    width:100%; border:1.5px solid #e2e8f0;
+    border-radius:9px; background:#f8fafc;
+    font-family:'Poppins'; color:#1e293b;
+    transition:border-color .2s, background .2s;
+}
+input{ padding:9px 10px 9px 34px; font-size:12px; }
+textarea{ padding:10px; height:70px; resize:none; font-size:12px; }
+input:focus, textarea:focus{ outline:none; border-color:#2563eb; background:white; }
+input::placeholder, textarea::placeholder{ color:#94a3b8; }
+
+.table{ width:100%; border-collapse:collapse; }
+.table th{
+    background:#f1f5f9; padding:8px 10px;
+    text-align:left; font-size:11px; font-weight:600; color:#475569;
+}
+.table td{ padding:4px 3px; border-bottom:1px solid #f1f5f9; }
+.table td:first-child input{ padding:7px 10px; font-size:11px; border-radius:6px; }
+.table td:last-child input{ padding:7px 10px; font-size:11px; text-align:right; border-radius:6px; }
+.table tfoot td{ padding:8px 10px; font-weight:700; font-size:13px; border-top:2px solid #e2e8f0; }
+
+.anticipos-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+.balance-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.balance{ border-radius:12px; padding:14px; text-align:center; }
+.green{ background:#eefdf3; }
+.orange{ background:#fff7ed; }
+.balance i{ font-size:22px; margin-bottom:6px; display:block; }
+.balance h3{ font-size:12px; font-weight:600; margin-bottom:8px; color:#475569; }
+.balance input{
+    text-align:center; font-size:15px; font-weight:700;
+    padding-left:8px; background:transparent; border-color:#d1d5db;
+}
+
+.buttons{ display:flex; flex-direction:column; gap:10px; margin-top:4px; }
+.btn{
+    border:none; border-radius:12px; padding:13px;
+    font-size:13px; font-weight:600; cursor:pointer; font-family:'Poppins';
+    display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.btn-primary{ background:linear-gradient(135deg,#06245c,#2563eb); color:white; }
+.btn-gray{ background:#e5e7eb; color:#111827; }
+
+.footer{ text-align:center; margin-top:10px; font-size:10px; color:#94a3b8; padding-bottom:6px; }
+
+/* ═══ PDF-MODE ═══ */
+.pdf-mode{ max-width:720px !important; padding:3px !important; }
+.pdf-mode .header{ padding:8px 12px !important; margin-bottom:6px !important; border-radius:10px !important; }
+.pdf-mode .logo{ width:34px !important; height:34px !important; font-size:13px !important; }
+.pdf-mode .header h1{ font-size:13px !important; }
+.pdf-mode .header p{ font-size:9px !important; }
+.pdf-mode .card{ padding:7px 10px !important; margin-bottom:5px !important; border-radius:8px !important; box-shadow:none !important; border:1px solid #dde3ea !important; }
+.pdf-mode .section-title{ margin-bottom:5px !important; }
+.pdf-mode .section-title h2{ font-size:11px !important; }
+.pdf-mode .number{ width:20px !important; height:20px !important; font-size:9px !important; border-radius:5px !important; }
+.pdf-mode .grid{ gap:4px !important; }
+.pdf-mode .anticipos-grid{ gap:4px !important; }
+.pdf-mode .field label{ font-size:8.5px !important; margin-bottom:2px !important; }
+.pdf-mode input, .pdf-mode textarea{ font-size:8.5px !important; border-radius:5px !important; border-width:1px !important; }
+.pdf-mode input{ padding:4px 4px 4px 20px !important; }
+.pdf-mode .input-box i{ font-size:8px !important; left:6px !important; }
+.pdf-mode .table th{ font-size:8.5px !important; padding:3px 6px !important; }
+.pdf-mode .table td{ padding:1px 2px !important; }
+.pdf-mode .table td:first-child input,
+.pdf-mode .table td:last-child input{ padding:3px 6px !important; font-size:8.5px !important; }
+.pdf-mode .table tfoot td{ padding:5px 6px !important; font-size:11px !important; }
+.pdf-mode .balance{ padding:6px !important; border-radius:7px !important; }
+.pdf-mode .balance i{ font-size:14px !important; margin-bottom:2px !important; }
+.pdf-mode .balance h3{ font-size:8.5px !important; margin-bottom:2px !important; }
+.pdf-mode .balance input{ font-size:11px !important; }
+.pdf-mode .balance-grid{ gap:5px !important; }
+.pdf-mode textarea{ height:36px !important; padding:4px !important; }
+.pdf-mode .footer{ margin-top:4px !important; font-size:9px !important; }
+
+@media(max-width:600px){
+    .grid{ grid-template-columns:1fr; }
+    .balance-grid{ grid-template-columns:1fr; }
+    .anticipos-grid{ grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-top">
+        <div class="logo"><i class="fa-solid fa-truck"></i></div>
+        <div>
+            <h1>GASTOS DEL VIAJE</h1>
+            <p>Control de gastos y anticipos</p>
+        </div>
+    </div>
+</div>
+
+<!-- 1. INFORMACIÓN GENERAL -->
+<div class="card">
+    <div class="section-title">
+        <div class="number">1</div>
+        <h2>Información General</h2>
+    </div>
+    <div class="grid">
+
+        <div class="field">
+            <label>Fecha</label>
+            <div class="input-box">
+                <i class="fa-regular fa-calendar"></i>
+                <input type="date">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Empresa</label>
+            <div class="input-box">
+                <i class="fa-regular fa-building"></i>
+                <input type="text" placeholder="Nombre empresa">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Origen</label>
+            <div class="input-box">
+                <i class="fa-solid fa-location-dot"></i>
+                <input type="text" placeholder="Ciudad origen">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Destino</label>
+            <div class="input-box">
+                <i class="fa-solid fa-location-dot"></i>
+                <input type="text" placeholder="Ciudad destino">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Manifiesto</label>
+            <div class="input-box">
+                <i class="fa-solid fa-file-lines"></i>
+                <input type="text" placeholder="Número manifiesto">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Placa</label>
+            <div class="input-box">
+                <i class="fa-solid fa-truck"></i>
+                <input type="text" placeholder="Ej: LEW-012">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Producto</label>
+            <div class="input-box">
+                <i class="fa-solid fa-box"></i>
+                <input type="text" placeholder="Tipo de carga">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Peso</label>
+            <div class="input-box">
+                <i class="fa-solid fa-weight-scale"></i>
+                <input type="text" placeholder="Kg / Ton">
+            </div>
+        </div>
+
+        <div class="field full">
+            <label>Conductor</label>
+            <div class="input-box">
+                <i class="fa-regular fa-user"></i>
+                <input type="text" id="conductor" placeholder="Nombre completo">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- 2. VALORES Y ANTICIPOS -->
+<div class="card">
+    <div class="section-title">
+        <div class="number">2</div>
+        <h2>Valores y Anticipos</h2>
+    </div>
+    <div class="anticipos-grid">
+
+        <div class="field">
+            <label>Valor del viaje</label>
+            <div class="input-box">
+                <i class="fa-solid fa-dollar-sign"></i>
+                <input type="text" class="money anticipo" placeholder="$0">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Anticipo empresa</label>
+            <div class="input-box">
+                <i class="fa-solid fa-building-columns"></i>
+                <input type="text" class="money anticipo" placeholder="$0">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Anticipo salida anterior</label>
+            <div class="input-box">
+                <i class="fa-solid fa-credit-card"></i>
+                <input type="text" class="money anticipo" placeholder="$0">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>Total anticipos</label>
+            <div class="input-box">
+                <i class="fa-solid fa-calculator"></i>
+                <input type="text" id="totalAnticipos" placeholder="$0" readonly
+                       style="background:#f1f5f9;cursor:default;color:#2563eb;font-weight:600;">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- 3. GASTOS DEL VIAJE -->
+<div class="card">
+    <div class="section-title">
+        <div class="number">3</div>
+        <h2>Gastos del Viaje</h2>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Concepto</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><input type="text" value="ACPM"></td><td><input type="text" class="money gasto" value="$0"></td></tr>
+            <tr><td><input type="text" value="Peajes"></td><td><input type="text" class="money gasto" value="$0"></td></tr>
+            <tr><td><input type="text" value="Parqueadero"></td><td><input type="text" class="money gasto" value="$0"></td></tr>
+            <tr><td><input type="text" value="Cargue"></td><td><input type="text" class="money gasto" value="$0"></td></tr>
+            <tr><td><input type="text" value="Descargue"></td><td><input type="text" class="money gasto" value="$0"></td></tr>
+            <tr><td><input type="text" value="Cambio de aceite"></td><td><input type="text" class="money gasto" value="$0"></td></tr>
+            <tr><td><input type="text" value="Propina"></td><td><input type="text" class="money gasto" value="$0"></td></tr>
+            <tr><td><input type="text" value="Engrase"></td><td><input type="text" class="money gasto" value="$0"></td></tr>
+            <tr><td><input type="text" value="Lavada"></td><td><input type="text" class="money gasto" value="$0"></td></tr>
+            <tr><td><input type="text" value="Porcentaje conductor"></td><td><input type="text" class="money gasto" value="$0"></td></tr>
+            <tr><td><input type="text" placeholder="Otro gasto"></td><td><input type="text" class="money gasto" value="$0"></td></tr>
+            <tr><td><input type="text" placeholder="Otro gasto"></td><td><input type="text" class="money gasto" value="$0"></td></tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td style="color:#1e293b;">TOTAL GASTOS</td>
+                <td id="totalGastos" style="color:#2563eb;">$0</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<!-- 4. SALDOS -->
+<div class="card">
+    <div class="section-title">
+        <div class="number">4</div>
+        <h2>Saldos</h2>
+    </div>
+    <div class="balance-grid">
+        <div class="balance green">
+            <i class="fa-solid fa-truck" style="color:#16a34a;"></i>
+            <h3>Saldo a favor del carro</h3>
+            <input type="text" class="money" id="saldoCarro" placeholder="$0">
+        </div>
+        <div class="balance orange">
+            <i class="fa-solid fa-wallet" style="color:#ea580c;"></i>
+            <h3>Saldo a favor conductor</h3>
+            <input type="text" class="money" id="saldoConductor" placeholder="$0">
+        </div>
+    </div>
+</div>
+
+<!-- 5. OBSERVACIONES -->
+<div class="card">
+    <div class="section-title">
+        <div class="number">5</div>
+        <h2>Observaciones</h2>
+    </div>
+    <textarea placeholder="Escribe aquí cualquier observación relevante del viaje..."></textarea>
+</div>
+
+<!-- BOTONES -->
+<div class="buttons">
+    <button class="btn btn-primary" onclick="generarYCompartirPDF()">
+        <i class="fa-solid fa-file-pdf"></i>
+        Guardar y Compartir PDF
+    </button>
+    <button class="btn btn-gray" onclick="nuevoViaje()">
+        <i class="fa-solid fa-rotate-right"></i>
+        Nuevo Viaje
+    </button>
+</div>
+
+<div class="footer">🔒 Documento confidencial</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+
+function formatoCOP(n){
+    return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0}).format(n||0);
+}
+
+function limpiarNumero(v){
+    if(!v) return 0;
+    return Number(v.replace(/[^\d]/g,''))||0;
+}
+
+function aplicarFormatoPesos(input){
+    const esGasto = input.classList.contains('gasto');
+
+    input.addEventListener('focus',()=>{
+        const n = limpiarNumero(input.value);
+        input.value = n > 0 ? n : '';
+    });
+
+    input.addEventListener('blur',()=>{
+        const valor = limpiarNumero(input.value);
+        input.value = valor > 0 ? formatoCOP(valor) : (esGasto ? '$0' : '');
+        recalcular();
+    });
+
+    input.addEventListener('input', recalcular);
+}
+
+document.querySelectorAll('.money').forEach(aplicarFormatoPesos);
+
+function recalcular(){
+
+    /* Gastos */
+    let totalG = 0;
+    document.querySelectorAll('.gasto').forEach(i=>{ totalG += limpiarNumero(i.value); });
+    document.getElementById('totalGastos').innerText = formatoCOP(totalG);
+
+    /* Anticipos */
+    let totalA = 0;
+    document.querySelectorAll('.anticipo').forEach(i=>{ totalA += limpiarNumero(i.value); });
+    const elTA = document.getElementById('totalAnticipos');
+    elTA.value = totalA > 0 ? formatoCOP(totalA) : '';
+
+    /* Saldos: editables manualmente, no se calculan automáticamente */
+}
+
+function nuevoViaje(){
+    document.querySelectorAll('input:not([readonly]), textarea').forEach(c=>{ c.value=''; });
+    document.querySelectorAll('.gasto').forEach(i=>{ i.value='$0'; });
+    document.getElementById('totalGastos').innerText = '$0';
+    document.getElementById('totalAnticipos').value  = '';
+
+}
+
+async function generarYCompartirPDF(){
+
+    const { jsPDF }  = window.jspdf;
+    const contenedor = document.querySelector('.container');
+    const botones    = document.querySelector('.buttons');
+    const footer     = document.querySelector('.footer');
+
+    botones.style.display = 'none';
+    footer.style.display  = 'none';
+    contenedor.classList.add('pdf-mode');
+
+    await new Promise(r => setTimeout(r, 150));
+
+    try{
+        const canvas = await html2canvas(contenedor,{
+            scale          : 2,
+            useCORS        : true,
+            logging        : false,
+            scrollX        : 0,
+            scrollY        : 0,
+            windowWidth    : contenedor.scrollWidth,
+            backgroundColor: '#eef2f7',
+            onclone: (docClone) => {
+                /* Copiar todos los valores actuales al documento clonado */
+                const origInputs  = contenedor.querySelectorAll('input, textarea');
+                const cloneInputs = docClone.querySelectorAll('input, textarea');
+                origInputs.forEach((orig, i) => {
+                    if(!cloneInputs[i]) return;
+                    const val = orig.value;
+                    cloneInputs[i].value = val;
+                    cloneInputs[i].setAttribute('value', val);
+                    /* Para que html2canvas lo renderice, reemplazar input por div con el texto */
+                    const div = docClone.createElement('div');
+                    const cs  = window.getComputedStyle(orig);
+                    div.textContent = val || orig.placeholder || '';
+                    div.style.cssText = [
+                        'width:100%',
+                        'box-sizing:border-box',
+                        'font-family:' + cs.fontFamily,
+                        'font-size:'   + cs.fontSize,
+                        'color:'       + (val ? cs.color : '#94a3b8'),
+                        'background:'  + cs.backgroundColor,
+                        'border:'      + cs.border,
+                        'border-radius:' + cs.borderRadius,
+                        'padding:'     + cs.padding,
+                        'min-height:'  + cs.height,
+                        'display:flex',
+                        'align-items:center',
+                        'overflow:hidden',
+                        'white-space:nowrap',
+                        'text-overflow:ellipsis'
+                    ].join(';');
+                    cloneInputs[i].parentNode.replaceChild(div, cloneInputs[i]);
+                });
+
+                /* Ocultar botones y footer en el clon también */
+                const cloneBtn = docClone.querySelector('.buttons');
+                const cloneFtr = docClone.querySelector('.footer');
+                if(cloneBtn) cloneBtn.style.display = 'none';
+                if(cloneFtr) cloneFtr.style.display = 'none';
+            }
+        });
+
+        contenedor.classList.remove('pdf-mode');
+        botones.style.display = '';
+        footer.style.display  = '';
+
+        const imgData     = canvas.toDataURL('image/jpeg', 1.0);
+        const pdfW        = 210;
+        const pdfH        = 297;
+        const margen      = 6;
+        const disponibleW = pdfW - margen * 2;
+        const ratio       = canvas.height / canvas.width;
+        const imgH        = disponibleW * ratio;
+
+        const pdf = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
+
+        if(imgH <= pdfH - margen * 2){
+            pdf.addImage(imgData,'JPEG', margen, margen, disponibleW, imgH,'','FAST');
+        }else{
+            const altoPagCanvas = Math.floor(canvas.width * (pdfH - margen*2) / disponibleW);
+            let yC = 0, pag = 0;
+            while(yC < canvas.height){
+                const alto = Math.min(altoPagCanvas, canvas.height - yC);
+                const c2   = document.createElement('canvas');
+                c2.width   = canvas.width;
+                c2.height  = alto;
+                c2.getContext('2d').drawImage(canvas, 0, yC, canvas.width, alto, 0, 0, canvas.width, alto);
+                if(pag > 0) pdf.addPage();
+                pdf.addImage(c2.toDataURL('image/jpeg',1.0),'JPEG', margen, margen, disponibleW, alto*disponibleW/canvas.width,'','FAST');
+                yC += alto; pag++;
+            }
+        }
+
+        const pdfBlob = pdf.output('blob');
+        const archivo = new File([pdfBlob],'gastos-viaje.pdf',{type:'application/pdf'});
+
+        if(navigator.canShare && navigator.canShare({files:[archivo]})){
+            await navigator.share({title:'Gastos del Viaje', files:[archivo]});
+        }else{
+            pdf.save('gastos-viaje.pdf');
+        }
+
+    }catch(err){
+        contenedor.classList.remove('pdf-mode');
+        botones.style.display = '';
+        footer.style.display  = '';
+        console.error(err);
+        alert('Error al generar PDF: '+err.message);
+    }
+}
+
+</script>
+</body>
+</html>
